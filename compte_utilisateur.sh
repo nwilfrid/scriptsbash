@@ -1,52 +1,69 @@
 #!/bin/bash
 
-## Auteur: Wilfrid NIOBET
+## Auteur: Wilfrid NIOBET
 ## Date de dernière modification : 21/03/2017
 ## Editeur: Geany
-## Version: 1.0
+## Version: 2.0
 ## Objet: Création d'un compte utilisateur
-## Commentaire: Concernant les mot de passe du cluster, 
+## Commentaire: Concernant les mot de passe du cluster,
 ##              ils sont définis par les administrateurs.
 
+## Fonction de vérification de l'intégrité du mot de passe'
+function verifpwd {
+	## rendre invisible la saisi dans le terminal
+	stty -echo
+
+	while [ "$passw" == "" ] ; do
+		read -p "Mot de passe: " passw1; echo
+		read -p "Ressaisir le mot de passe: " passw2; echo
+
+		if [ $passw1 = $passw2 ]; then
+			echo "le mot de passe est correct"
+			passw=$passw2
+			motdepasse=$(mkpasswd --method=sha-512 $passw)
+		else
+			echo -e ".oO°°Oo.\n\t\tLes mots de passe ne sont pas identiques,\n \t\tregarder bien vos doigts et recommencer !\n.oO°°Oo"
+		fi
+	done
+	}
+
+## Fonction ajouter le compte utilisateur
+function addCompte {
+    useradd $uname -m \
+	    --comment "Bureau $bureau, Tel $tel, Responsable $responsable, Find de service $finService" \
+	    --password $motdepasse ;
+	}
+
+## Fonction pour afficher les informations saisie (teste des variables)
+function testCompte {
+	echo "Utilisateur: $uname" ;
+	echo "pwd: $motdepasse" ;
+	echo "Bureau: $bureau" ;
+	echo "Tel: $tel" ;
+	echo "Responsable: $responsable" ;
+	echo "Fin de service: $finService" ;
+	}
+
+## Enregistrement des variables
+passw=""
 echo "Création d'un compte utilisateur:"
 read -p "Username: " uname
-stty -echo
-passw=""
-while [ "$passw" == "" ] ; do
-	read -p "Mot de passe: " passw1; echo
-	read -p "Ressaisir le mot de passe: " passw2; echo
 
-	if [ $passw1 = $passw2 ]; then
-		echo "le mot de passe est correct"
-		passw="passw2"
-	else
-		echo "le mot de passe n'est pas identique, relancer le script pour créer un nouveau compte utilisateur."
-	fi
-done
+verifpwd
+
+## permettre à nouveau l'affichage dans le terminal
 stty echo
 
+## Enregistrement des commentaires sur le compte
 read -p "Numéro de bureau: " bureau
 read -p "Numéro de téléphone (00-00-00-00-00):" tel
 read -p "Responsable: " responsable
 read -p "Fin de service: (aaaa-mm-jj)" finService
 
-## Pour afficher les informations saisie (teste des variables)
-#~ echo "Utilisateur: $uname"
-#~ echo "pwd: ${!passw}"
-#~ echo "Bureau: $bureau"
-#~ echo "Tel: $tel"
-#~ echo "Responsable: $responsable"
-#~ echo "Fin de service: $finService"
+echo "---"
 
+addCompte
 
-## Décommenter cette partie ci-dessous pour rendre actif le script
-#~ useradd $uname \
-	#~ --comment "Bureau $bureau, Tel $tel, Responsable $responsable, Find de service $finService" \
-	#~ --home-dir /home/$uname \
-	#~ --expiredate $finService \ #seulement si le compte doit être inactif à une date définie
-	#~ --create-home /home/$uname \
-	#~ --password $passw \
-
-echo "L'utilisateur est maintenant créé !!!"
+echo "Le compte $uname est maintenant créé !"
 
 exit 0
