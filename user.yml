@@ -1,0 +1,14 @@
+# création utilisateur
+# --------------------
+###
+---
+- hosts: all
+  user: root
+  tasks:
+    - name: nouvel utilisateur
+      action:
+        user
+        name='{{ username }}'
+        shell=/bin/bash
+        comment={{ desc }}
+        password='{{ pwd }}'
