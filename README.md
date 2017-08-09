@@ -1,7 +1,8 @@
 # scriptsbash
 Quelques scripts pratique en sh/bash
 
-*** Compte utilisateur ***
+**Compte utilisateur**
+
 C'est un script qui a été réalisé pour l'administration des comptes utilisateur d'un cluster scientifique.
 Il comprend trois fichiers
 - compte_utilisateur.sh
@@ -10,6 +11,7 @@ Il comprend trois fichiers
 
 Il a pour objectif de créer un compte utilisateur sous linux en modifiant les commentaires (information sur le compte).
 
-*** Photos ****
+**Photos**
+
 Le script photos.sh est le moyen de renommer et d'organiser par date les photos regrouper dans un répertoire à partir des métadonnées inscrites dans chacune des photos.
 
